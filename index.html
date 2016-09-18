@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rock Paper Siccors - Senthil</title>
+    <!-- reset CSS  -->
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    
+    <!-- Google fonts -->
+  	<link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+  	
+  	<!-- Added link to the jQuery Library -->
+  	<script src="https://code.jquery.com/jquery-2.2.3.js" integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4=" crossorigin="anonymous"></script>
+	
+    <!-- Added a link to Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <!-- style sheet -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+    <!-- Firebase Reference -->
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+
+  <!-- Moment.js -->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+</head>
+
+<body>
+<header>
+  <nav class="navbar navbar-custom">
+    <div class="container">
+       Rock Paper Siccors
+  </nav>
+</header>
+
+<div class="row"> <!-- row1-->
+    <label>Name</label> <input type="text" id = "name" size = "20">
+    <button id = "submitbtn"> </button>
+</div> <!-- first row-->
+
+<div class="row container">
+    <div class="col-md-1"> </div>
+    <div class="col-md-3" id = "firstPlayer"></div>
+    <div class="col-md-1"> </div>
+    <div class="col-md-3" id = "result"> </div>
+    <div class="col-md-1"> </div>
+    <div class="col-md-3" id = "secondPlayer"></div>
+    <div class="col-md-1"> </div>
+
+</div> <!-- second row -->
+
+<div class="row">
+  <label>Message</label><br>
+  <textarea id="message" placeholder="Message"> </textarea>
+</div> <!-- third row -->
+
+<div class="row"> <!-- row4-->
+    <input type="text" id = "inputMess" size = "20">
+    <button id = "Messbtn"> </button>
+</div> <!-- frouth row-->
+
+
+
+<script src = "assets/javascript/app.js" type="text/javascript"> </script>
+</body>
+</html>

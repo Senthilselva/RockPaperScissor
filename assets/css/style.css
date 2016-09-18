@@ -1,0 +1,25 @@
+body{
+	font-family: 'Mogra', cursive;
+	text-align: center;
+	background-color: #00ffff;
+}
+
+header{
+	font-size: 48px;
+}
+
+#firstPlayer,
+#result,
+#secondPlayer{
+	height:280px;
+	background-color: white;
+	margin-top:20px;
+}
+
+#message{
+	margin-top:10px;
+	width: 70%;
+	height:100px;
+	border: 2px solid #ccc;
+	padding: 15px;
+}

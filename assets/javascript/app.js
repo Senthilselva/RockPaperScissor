@@ -145,6 +145,9 @@ function playgame()
 	});
 	$("#Name"+mydivId).html("You are " + mydata.name);
 	$("#Score"+mydivId).html("Wins: " + mydata.wins + ", Losses: " +mydata.losses);
+	$("#List"+mydivId).html('<button class="answer-button" id="button" data-name="r">' +"Rock" + '</button>');
+	$("#List"+mydivId).append('<button class="answer-button" id="button" data-name="p">' +"Paper" + '</button>');
+	$("#List"+mydivId).append('<button class="answer-button" id="button" data-name="s">' +"Scissor" + '</button>')
 
 	//get other Player information and populate enemydiv 
 	enemyref.once("value", function(snapshot) {
@@ -154,15 +157,12 @@ function playgame()
 			losses: snapshot.val().losses
 		}	
 	});
+
 	$("#Name"+enemydivId).html("You are playing against "+enemydata.name);
 	$("#Score"+enemydivId).html("Wins: " + enemydata.wins+", Losses: "+ enemydata.losses);
 
 }
 
-
-// if (snapshot.child("").exists() && snapshot.child("highPrice").exists()) {
-
-// }
 
 
 });//ondocument ready

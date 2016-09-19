@@ -11,7 +11,7 @@ header{
 #Player1,
 #result,
 #Player2{
-	height:200px;
+	height:auto;
 	background-color: white;
 	margin-top:20px;
 }

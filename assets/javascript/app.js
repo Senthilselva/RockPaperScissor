@@ -13,7 +13,7 @@
 
 // Variable to reference the database
 var database = firebase.database();
-var ref = database.ref();
+var playerRef = database.ref("players");
 sessionStorage.setItem("thisPlayer", 0); 
 sessionStorage.setItem("otherPlayer", 0);
 var thisPlayerGV;
@@ -32,7 +32,7 @@ function adduser(){
 
 	//checking to see if there are more than two player playing
 	//seting the players position
-	ref.once("value", function(snapshot) {
+	playerRef.once("value", function(snapshot) {
 		var length = snapshot.numChildren();
 		var key;
 		if(length == 1){ 
@@ -60,7 +60,7 @@ function adduser(){
 			return;
 		} else {
 
-			database.ref().push({
+			playerRef.push({
         		name: newuser,
         		wins: 0,
         		losses: 0
@@ -74,7 +74,8 @@ function adduser(){
 
 // when a child is added removing the firebase generated key and assigning 
 // either "1" or "2" 
-database.ref().on("child_added", function(snapshot, prevChildKey) {
+playerRef.on("child_added", function(snapshot, prevChildKey)
+{
 	//debugger;
 	var usersKey = snapshot.key;
 	var Lthisplayer = sessionStorage.getItem("thisPlayer");
@@ -87,19 +88,18 @@ database.ref().on("child_added", function(snapshot, prevChildKey) {
 		//debugger;
 
 		if (prevChildKey == 1) { 
-			var Vchild = ref.child(usersKey); 
-			ref.child(2).set(snapshot.val());
+			var Vchild = playerRef.child(usersKey); 
+			playerRef.child(2).set(snapshot.val());
 			Vchild.remove();
 			//var this player will be used 
 			
 		} else { 
-			var Vchild = ref.child(usersKey); 
-			ref.child(1).set(snapshot.val());
-			Vchild.remove();
-			
+			var Vchild = playerRef.child(usersKey); 
+			playerRef.child(1).set(snapshot.val());
+			Vchild.remove();		
 		}
 
-		ref.once("value", function(snapshot) {
+		playerRef.once("value", function(snapshot) {
 			var length = snapshot.numChildren();
 			if(length == 2){
 				console.log("playgame");
@@ -107,11 +107,6 @@ database.ref().on("child_added", function(snapshot, prevChildKey) {
 			}
 		});
 	}
-
-	
-
-	// console.log(sessionStorage.getItem("thisPlayer"));
-	// console.log(sessionStorage.getItem("otherPlayer"));
 
 }); //on child added
 
@@ -122,24 +117,25 @@ function confirmExit()
 	var Lthisplayer = sessionStorage.getItem("thisPlayer");
   	//debugger;
   	if(Lthisplayer == 2 ){
-  		ref.child(2).remove();
+  		playerRef.child(2).remove();
   	}
   	if(Lthisplayer == 1){
-  		ref.child(1).remove();
+  		playerRef.child(1).remove();
   	}
 }
 
-function playgame(){
+function playgame()
+{
 	console.log("this  " + thisPlayerGV);
 	console.log("other  "+ otherPlayerGV);
-	var mydivId = "#Player"+thisPlayerGV;
-	var enemydivId = "#Player"+otherPlayerGV;
-	// $(mydivId+"Name").html("You");
-	// $(enemydivId+"Name").html("Your enemy");
-	myref = database.ref(thisPlayerGV);
-	enemyref = database.ref(otherPlayerGV);
-	//get my Player information and populate my divref.once("value", function(snapshot) {
+	var mydivId = "Player"+thisPlayerGV;
+	var enemydivId = "Player"+otherPlayerGV;
 	
+	myref = database.ref("players/"+thisPlayerGV);
+	enemyref = database.ref("players/"+otherPlayerGV);
+	
+
+	//get my Player information and populate my div
 	myref.once("value", function(snapshot) {
 		mydata = {
 			name: snapshot.val().name,
@@ -147,11 +143,10 @@ function playgame(){
 			losses: snapshot.val().losses
 		}	
 	});
-
-	$(mydivId+"Name").html("You are " + mydata.name);
+	$("#Name"+mydivId).html("You are " + mydata.name);
+	$("#Score"+mydivId).html("Wins: " + mydata.wins + ", Losses: " +mydata.losses);
 
 	//get other Player information and populate enemydiv 
-
 	enemyref.once("value", function(snapshot) {
 		enemydata = {
 			name: snapshot.val().name,
@@ -159,13 +154,15 @@ function playgame(){
 			losses: snapshot.val().losses
 		}	
 	});
-
-	$(enemydivId+"Name").html("You are playing against "+enemydata.name);
-
+	$("#Name"+enemydivId).html("You are playing against "+enemydata.name);
+	$("#Score"+enemydivId).html("Wins: " + enemydata.wins+", Losses: "+ enemydata.losses);
 
 }
+
 
 // if (snapshot.child("").exists() && snapshot.child("highPrice").exists()) {
 
 // }
+
+
 });//ondocument ready

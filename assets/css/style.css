@@ -8,10 +8,10 @@ header{
 	font-size: 48px;
 }
 
-#firstPlayer,
+#Player1,
 #result,
-#secondPlayer{
-	height:280px;
+#Player2{
+	height:200px;
 	background-color: white;
 	margin-top:20px;
 }

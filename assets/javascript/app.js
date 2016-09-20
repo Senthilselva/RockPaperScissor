@@ -146,7 +146,10 @@ function playgame()
 	
 	myref = database.ref("players/"+thisPlayerGV);
 	enemyref = database.ref("players/"+otherPlayerGV);
-	
+		
+
+	database.ref("turn").remove();
+	database.ref("players/"+thisPlayerGV+'/display').remove();
 
 	//get my Player information and populate my div
 	myref.once("value", function(snapshot) {
@@ -188,11 +191,11 @@ function buttonselected(e){
 	ref.once("value", function(snapshot){
 		if (snapshot.child("turn").exists()) {
 			ref.update({
-				turn:2
+				turn:2,
 			});
 		} else {
 			ref.update({
-				turn:1
+				turn:1,
 			});
 			$("#List"+mydivId).append("Waiting for the other");
 		}
@@ -205,7 +208,7 @@ database.ref("turn").on("value", function(snapshot) {
 	console.log("turn"+snapshot.val());
 	if (snapshot.val() == 2){ //if turn=2 then both the player selected 
 		console.log("start comparing");
-
+		
 		enemyref.once("value", function(snapshot) {
 			enemydata = {
 			name: snapshot.val().name,
@@ -221,38 +224,36 @@ database.ref("turn").on("value", function(snapshot) {
 			}
 		});	
 
-
-		var winner = findwinner(mydata.choice, enemydata.choice);
-
-		switch (winner){
-			case 1:
-				mydata.wins++;
-				break;
-			case 2:
-				mydata.losses++;
-				break;
-			case 3:
-				ties=1;
-				break;
-		}
-
-		myref.update({
-			wins:mydata.wins,
-			losses:mydata.losses,
-		});
-
-		myref.child("choice").remove();
-		database.ref("turn").remove();
-		playgame();
-
+	var winner = findwinner(mydata.choice, enemydata.choice);
+	switch (winner){
+	case 1:
+		mydata.wins++;
+		break;
+	case 2:
+		mydata.losses++;
+		break;
+	case 3:
+		ties=1;
+		break;
 	}
 
+	myref.update({
+		wins:mydata.wins,
+		losses:mydata.losses,
+	});
+
+	//myref.child("choice").remove();
+
+	//make sure both the users have tir values displayed
+		myref.update({
+			display:1
+		});
+	}//end if statement
 });
 
 function findwinner(Guess1, Guess2){
-	alert( Guess1 + Guess2);
-
-		if ((Guess1 == 'Rock') && (computerGuess == 'Scissor')){
+	
+		if ((Guess1 == 'Rock') && (Guess2 == 'Scissor')){
 			return 1;
 		}else if ((Guess1 == 'Rock') && (Guess2 == 'Paper')){
 			return 2;
@@ -264,9 +265,37 @@ function findwinner(Guess1, Guess2){
 			return 1;
 		}else if ((Guess1 == 'Paper') && (Guess2 == 'Scissor')){
 			return 2;
-		}else if (userGuess == computerGuess){
+		}else if (Guess1 == Guess2){
 			return 0;
 		}	
 }
+
+
+
+myref.on('value', function(snapshot){
+	if(snapshot.child('display').exists()){
+		enemyref.once('value', function(snapshot){
+			if(snapshot.child('display').exists()){
+				console.log("helloMYREF");
+			playgame();	
+			}
+		});
+		
+	}
+});
+
+// enemyref.on('value', function(snapshot){
+// 	if(snapshot.child('display').exists()){
+// 		myref.once('value', function(snapshot){
+// 			if(snapshot.child('display').exists()){
+// 				console.log("hello");
+
+// 			playgame();	
+// 			}
+// 		});
+		
+// 	}
+// });
+
 
 });//ondocument ready

@@ -13,6 +13,7 @@
 
 // Variable to reference the database
 var database = firebase.database();
+var ref = database.ref();
 var playerRef = database.ref("players");
 sessionStorage.setItem("thisPlayer", 0); 
 sessionStorage.setItem("otherPlayer", 0);
@@ -20,10 +21,21 @@ var thisPlayerGV;
 var otherPlayerGV;
 var mydata = {};
 var enemydata ={};
+var myref;
+var enemyref;
+var mydivId;
+var enemydivId;
+
 
 $(document).ready(function() {
 
 $("#submitbtn").on('click',adduser);
+
+$('.ListPlayer').on('click','.answer-button', function(e){
+	console.log("hahaha");
+
+	buttonselected(e);
+});
 
 function adduser(){
 
@@ -66,6 +78,7 @@ function adduser(){
         		losses: 0
     		});//set the value
     	$(".playerName").html("<h2> Welcome "+newuser+" You are player" + sessionStorage.getItem("thisPlayer") +" </h2>");
+    	$("#NamePlayer"+sessionStorage.getItem("thisPlayer")).html(newuser + "ready");
 		}
 	});
 
@@ -84,7 +97,7 @@ playerRef.on("child_added", function(snapshot, prevChildKey)
 
 		//this if statement is to skip the inital run
 		//change the key Firebase generated key 
-	    //console.log(prevChildKey);
+	
 		//debugger;
 
 		if (prevChildKey == 1) { 
@@ -128,8 +141,8 @@ function playgame()
 {
 	console.log("this  " + thisPlayerGV);
 	console.log("other  "+ otherPlayerGV);
-	var mydivId = "Player"+thisPlayerGV;
-	var enemydivId = "Player"+otherPlayerGV;
+	mydivId = "Player"+thisPlayerGV;
+	enemydivId = "Player"+otherPlayerGV;
 	
 	myref = database.ref("players/"+thisPlayerGV);
 	enemyref = database.ref("players/"+otherPlayerGV);
@@ -145,9 +158,9 @@ function playgame()
 	});
 	$("#Name"+mydivId).html("You are " + mydata.name);
 	$("#Score"+mydivId).html("Wins: " + mydata.wins + ", Losses: " +mydata.losses);
-	$("#List"+mydivId).html('<button class="answer-button" id="button" data-name="r">' +"Rock" + '</button>');
-	$("#List"+mydivId).append('<button class="answer-button" id="button" data-name="p">' +"Paper" + '</button>');
-	$("#List"+mydivId).append('<button class="answer-button" id="button" data-name="s">' +"Scissor" + '</button>')
+	$("#List"+mydivId).html('<button class="answer-button" id="button" data-name="Rock">' +"Rock" + '</button>');
+	$("#List"+mydivId).append('<button class="answer-button" id="button" data-name="Paper">' +"Paper" + '</button>');
+	$("#List"+mydivId).append('<button class="answer-button" id="button" data-name="Scissor">' +"Scissor" + '</button>')
 
 	//get other Player information and populate enemydiv 
 	enemyref.once("value", function(snapshot) {
@@ -163,6 +176,97 @@ function playgame()
 
 }
 
+function buttonselected(e){
+	console.log("Button Selecter");
+	var answer = $(e.target).data("name");
+	$("#List"+mydivId).html(answer);
+	myref.update({
+		choice: answer
+	});
 
+    //recording number of people who choose 
+	ref.once("value", function(snapshot){
+		if (snapshot.child("turn").exists()) {
+			ref.update({
+				turn:2
+			});
+		} else {
+			ref.update({
+				turn:1
+			});
+			$("#List"+mydivId).append("Waiting for the other");
+		}
+	});
+} //button selected 
+
+
+//eventlistener to see on turns to see if both have selected
+database.ref("turn").on("value", function(snapshot) {
+	console.log("turn"+snapshot.val());
+	if (snapshot.val() == 2){ //if turn=2 then both the player selected 
+		console.log("start comparing");
+
+		enemyref.once("value", function(snapshot) {
+			enemydata = {
+			name: snapshot.val().name,
+			choice: snapshot.val().choice
+			}	
+		});
+		myref.once("value", function(snapshot) {
+			mydata = {
+				name: snapshot.val().name,
+				wins: snapshot.val().wins,
+				losses: snapshot.val().losses,
+				choice: snapshot.val().choice
+			}
+		});	
+
+
+		var winner = findwinner(mydata.choice, enemydata.choice);
+
+		switch (winner){
+			case 1:
+				mydata.wins++;
+				break;
+			case 2:
+				mydata.losses++;
+				break;
+			case 3:
+				ties=1;
+				break;
+		}
+
+		myref.update({
+			wins:mydata.wins,
+			losses:mydata.losses,
+		});
+
+		myref.child("choice").remove();
+		database.ref("turn").remove();
+		playgame();
+
+	}
+
+});
+
+function findwinner(Guess1, Guess2){
+	alert( Guess1 + Guess2);
+
+		if ((Guess1 == 'Rock') && (computerGuess == 'Scissor')){
+			return 1;
+		}else if ((Guess1 == 'Rock') && (Guess2 == 'Paper')){
+			return 2;
+		}else if ((Guess1 == 'Scissor') && (Guess2 == 'Rock')){
+			return 2;
+		}else if ((Guess1 == 'Scissor') && (Guess2 == 'Paper')){
+			return 1;
+		}else if ((Guess1 == 'Paper') && (Guess2 == 'Rock')){
+			return 1;
+		}else if ((Guess1 == 'Paper') && (Guess2 == 'Scissor')){
+			return 2;
+		}else if (userGuess == computerGuess){
+			return 0;
+		}	
+}
 
 });//ondocument ready

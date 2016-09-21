@@ -37,6 +37,8 @@ $('.ListPlayer').on('click','.answer-button', function(e){
 	buttonselected(e);
 });
 
+$("#Messbtn").on("click", addAndDisplayChat);
+
 function adduser(){
 
 	var newuser = $("#name").val().trim();
@@ -160,7 +162,7 @@ function playgame()
 		}	
 	});
 	myref.child('choice').remove();
-	
+	$('#result').html("");
 	$("#Name"+mydivId).html("You are " + mydata.name);
 	$("#Score"+mydivId).html("Wins: " + mydata.wins + ", Losses: " +mydata.losses);
 	$("#List"+mydivId).html('<button class="answer-button" id="button" data-name="Rock">' +"Rock" + '</button>');
@@ -247,10 +249,7 @@ database.ref("turn").on("value", function(snapshot) {
 		losses:mydata.losses,
 	});
 
-	//myref.child("choice").remove();
-
-	//make sure both the users have tir values displayed
-	setTimeout(playgame(),500);
+	setTimeout(playgame,500);
 	}//end if statement
 });
 
@@ -273,21 +272,19 @@ function findwinner(Guess1, Guess2){
 		}	
 }
 
+function addAndDisplayChat(){
+	var mess=$("#inputMess").val();
+	database.ref("chat").push({
+		chat:mess
+	});
+	$("#inputMess").val("");
+}
 
+database.ref('chat').limitToLast(1).on('child_added', function(snapshot){
+	// all records after the last continue to invoke this function
+   	$('#message').append(snapshot.val().chat+"\n");
 
-
-// enemyref.on('value', function(snapshot){
-// 	if(snapshot.child('display').exists()){
-// 		myref.once('value', function(snapshot){
-// 			if(snapshot.child('display').exists()){
-// 				console.log("hello");
-
-// 			playgame();	
-// 			}
-// 		});
-		
-// 	}
-// });
+});
 
 
 });//ondocument ready

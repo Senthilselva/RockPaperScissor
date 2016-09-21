@@ -22,4 +22,5 @@ header{
 	height:100px;
 	border: 2px solid #ccc;
 	padding: 15px;
+	overflow-y: scroll;
 }

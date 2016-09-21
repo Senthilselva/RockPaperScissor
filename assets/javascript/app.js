@@ -159,6 +159,8 @@ function playgame()
 			losses: snapshot.val().losses
 		}	
 	});
+	myref.child('choice').remove();
+	
 	$("#Name"+mydivId).html("You are " + mydata.name);
 	$("#Score"+mydivId).html("Wins: " + mydata.wins + ", Losses: " +mydata.losses);
 	$("#List"+mydivId).html('<button class="answer-button" id="button" data-name="Rock">' +"Rock" + '</button>');
@@ -228,15 +230,18 @@ database.ref("turn").on("value", function(snapshot) {
 	switch (winner){
 	case 1:
 		mydata.wins++;
+		$('#result').html("You Won");
 		break;
 	case 2:
 		mydata.losses++;
+		$('#result').html("You Lost");
 		break;
 	case 3:
 		ties=1;
+		$('#result').html("It is a tie");
 		break;
 	}
-
+	
 	myref.update({
 		wins:mydata.wins,
 		losses:mydata.losses,
@@ -245,9 +250,7 @@ database.ref("turn").on("value", function(snapshot) {
 	//myref.child("choice").remove();
 
 	//make sure both the users have tir values displayed
-		myref.update({
-			display:1
-		});
+	setTimeout(playgame(),500);
 	}//end if statement
 });
 
@@ -272,17 +275,6 @@ function findwinner(Guess1, Guess2){
 
 
 
-myref.on('value', function(snapshot){
-	if(snapshot.child('display').exists()){
-		enemyref.once('value', function(snapshot){
-			if(snapshot.child('display').exists()){
-				console.log("helloMYREF");
-			playgame();	
-			}
-		});
-		
-	}
-});
 
 // enemyref.on('value', function(snapshot){
 // 	if(snapshot.child('display').exists()){

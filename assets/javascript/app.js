@@ -32,7 +32,7 @@ $(document).ready(function() {
 $("#submitbtn").on('click',adduser);
 
 $('.ListPlayer').on('click','.answer-button', function(e){
-	console.log("hahaha");
+	//console.log("hahaha");
 
 	buttonselected(e);
 });
@@ -80,7 +80,7 @@ function adduser(){
         		losses: 0
     		});//set the value
     	$(".playerName").html("<h2> Welcome "+newuser+" You are player" + sessionStorage.getItem("thisPlayer") +" </h2>");
-    	$("#NamePlayer"+sessionStorage.getItem("thisPlayer")).html(newuser + "ready");
+    	$("#NamePlayer"+sessionStorage.getItem("thisPlayer")).html(newuser + " is ready!!!");
 		}
 	});
 
@@ -117,7 +117,7 @@ playerRef.on("child_added", function(snapshot, prevChildKey)
 		playerRef.once("value", function(snapshot) {
 			var length = snapshot.numChildren();
 			if(length == 2){
-				console.log("playgame");
+				//console.log("playgame");
 				playgame();
 			}
 		});
@@ -130,6 +130,7 @@ window.onbeforeunload = confirmExit;
 function confirmExit()
 {
 	var Lthisplayer = sessionStorage.getItem("thisPlayer");
+	database.ref("turn").remove();
   	//debugger;
   	if(Lthisplayer == 2 ){
   		playerRef.child(2).remove();
@@ -186,7 +187,7 @@ function playgame()
 function buttonselected(e){
 	console.log("Button Selecter");
 	var answer = $(e.target).data("name");
-	$("#List"+mydivId).html(answer);
+	$("#List"+mydivId).html("You selected "+answer+"<br>");
 	myref.update({
 		choice: answer
 	});
@@ -249,7 +250,7 @@ database.ref("turn").on("value", function(snapshot) {
 		losses:mydata.losses,
 	});
 
-	setTimeout(playgame,500);
+	setTimeout(playgame,1000);
 	}//end if statement
 });
 

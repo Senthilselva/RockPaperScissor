@@ -8,12 +8,19 @@ header{
 	font-size: 48px;
 }
 
-#Player1,
+
 #result,
-#Player2{
-	height:auto;
+#Player{
+	
+	height:200px;
 	background-color: white;
 	margin-top:20px;
+}
+
+.ListPlayer{
+	line-height:10px;
+	padding-top: 50px;
+	padding-bottom: 50px;
 }
 
 #message{

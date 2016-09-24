@@ -8,10 +8,12 @@ header{
 	font-size: 48px;
 }
 
+#result{
+	font-size: 50px;
+}
 
 #result,
 #Player{
-	
 	height:200px;
 	background-color: white;
 	margin-top:20px;

@@ -33,7 +33,6 @@ $("#submitbtn").on('click',adduser);
 
 $('.ListPlayer').on('click','.answer-button', function(e){
 	//console.log("hahaha");
-
 	buttonselected(e);
 });
 
@@ -45,7 +44,7 @@ function adduser(){
 	console.log("user  "+newuser);
 
 	//checking to see if there are more than two player playing
-	//seting the players position
+	//setting the players position
 	playerRef.once("value", function(snapshot) {
 		var length = snapshot.numChildren();
 		var key;
@@ -131,13 +130,14 @@ function confirmExit()
 {
 	var Lthisplayer = sessionStorage.getItem("thisPlayer");
 	database.ref("turn").remove();
-  	//debugger;
+  debugger;
   	if(Lthisplayer == 2 ){
   		playerRef.child(2).remove();
   	}
   	if(Lthisplayer == 1){
   		playerRef.child(1).remove();
   	}
+	//database.ref("chat").remove();
 }
 
 function playgame()
@@ -187,7 +187,7 @@ function playgame()
 function buttonselected(e){
 	console.log("Button Selecter");
 	var answer = $(e.target).data("name");
-	$("#List"+mydivId).html("You selected "+answer+"<br>");
+	$("#List"+mydivId).html("You selected "+answer+"<br>"+"<br>");
 	myref.update({
 		choice: answer
 	});

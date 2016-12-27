@@ -130,7 +130,7 @@ function confirmExit()
 {
 	var Lthisplayer = sessionStorage.getItem("thisPlayer");
 	database.ref("turn").remove();
-  debugger;
+  //debugger;
   	if(Lthisplayer == 2 ){
   		playerRef.child(2).remove();
   	}
